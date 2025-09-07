@@ -1,0 +1,141 @@
+https://maven.apache.org/ ---> Maven documentation
+
+What Is Maven?
+
+Maven is a build automation and dependency management tool used primarily for Java projects. It simplifies the process of:
+- Adding libraries (JAR files)
+- Managing transitive dependencies
+- Handling version compatibility
+- Compiling, testing, packaging, and deploying code
+
+->Maven & Dependencies
+
+- **Example**: To connect Java with MySQL, you need a connector (e.g., MySQL Connector/J).
+- **Hibernate**: An ORM tool that lets you interact with databases without writing SQL queries. Hibernate requires multiple JAR files due to its transitive dependencies.
+- **Spring Framework**: Requires its own set of JARs. When using Spring + Hibernate together, version compatibility is crucial.
+- Manually managing these dependencies is time-consuming.
+- **Maven automates**:
+  - Downloading dependencies
+  - Managing transitive dependencies
+  - Resolving version conflicts
+  - Providing plugins for build tasks
+
+
+->Maven in IDEs
+
+Most IDEs (IntelliJ IDEA, Eclipse, NetBeans) support Maven by default.
+
+**Example (IntelliJ IDEA)**:
+- File → New Project → Select "Maven" as the build system
+- Navigate to Maven tab → Lifecycle → Access goals like:
+  - `clean`: Deletes target directory
+  - `validate`: Validates project structure
+  - `compile`: Compiles source code
+  - `test`: Runs unit tests
+  - `package`: Packages code into JAR/WAR
+  - `install`: Installs package into local repository
+  - `deploy`: Deploys to remote repository (requires config)
+
+---
+
+->POM (Project Object Model)
+
+Maven uses `pom.xml` to manage project configuration.
+consists of GAV
+GAV Coordinates:
+- **GroupId**: Organization or group name (e.g., `org.springframework`)
+- **ArtifactId**: Project/module/Dependency name (e.g., `spring-core`)
+- **Version**: Specific version of the artifact
+
+->Transitive Dependencies:
+If your project depends on Library A, and Library A depends on Library B, Maven automatically includes Library B.
+
+```
+Your Project
+   └── Library A (direct)
+         └── Library B (transitive)
+```
+
+->Adding Dependencies:
+- Visit [https://mvnrepository.com](https://mvnrepository.com)
+- Search for the library
+- Copy the `<dependency>` block and paste it inside `<dependencies>` in `pom.xml`
+- Refresh Maven project in IDE
+
+->Archetypes in Maven
+
+Archetypes are project templates that help you quickly scaffold a Maven project.
+
+- Use predefined archetypes or create your own.
+- Archetypes generate a basic `pom.xml` and folder structure.
+- Useful for starting projects with standard configurations.
+
+->Maven Plugins
+
+Plugins are tools that execute specific tasks during the build lifecycle.
+
+**Example:**
+```xml
+<plugin>
+  <groupId>org.apache.maven.plugins</groupId>
+  <artifactId>maven-compiler-plugin</artifactId>
+  <version>3.8.1</version>
+  <configuration>
+    <source>1.8</source>
+    <target>1.8</target>
+  </configuration>
+</plugin>
+```
+
+- **maven-compiler-plugin**: Compiles Java source code
+- Other plugins:
+  - `maven-surefire-plugin`: Runs tests
+  - `maven-jar-plugin`: Creates JAR files
+  - `maven-war-plugin`: Creates WAR files
+
+---
+
+->Effective POM (SuperPOM)
+
+- Every Maven project inherits from a default configuration called the **SuperPOM**.
+- Your `pom.xml` contains only custom configurations, but the full configuration (including inherited settings) is called the **Effective POM**.
+- To view it: Right-click `pom.xml` → Maven → Show Effective POM
+- Do not edit the SuperPOM directly. Make changes in your `pom.xml`, and Maven will merge them.
+
+
+->How Maven Resolves Dependencies
+
+1. **Local Repository** (`.m2` folder in your user directory):
+   - Maven first checks here for dependencies.
+2. **Remote Repository** (Maven Central):
+   - If not found locally, Maven downloads from [https://repo.maven.apache.org](https://repo.maven.apache.org)
+3. **Custom Repositories** (if configured):
+   - You can define additional repositories in `pom.xml` or `settings.xml`
+
+If a dependency isn’t found in any repository, Maven will throw an error.
+
+
+
+->Maven Lifecycle Phases
+
+Maven follows a standard build lifecycle with phases:
+
+| Phase     | Description                              |
+|-----------|------------------------------------------|
+| validate  | Checks if project is correct             |
+| compile   | Compiles source code                     |
+| test      | Runs unit tests                          |
+| package   | Packages code into JAR/WAR               |
+| verify    | Runs checks on results of integration tests |
+| install   | Installs package into local repository   |
+| deploy    | Copies final package to remote repository |
+
+-Default Scope in Maven is Compile
+
+->Maven Best Practices
+
+- Always verify compatibility between versions of Spring, Hibernate, and other libraries.
+- Use dependency management to avoid version conflicts.
+- Keep your `pom.xml` clean and organized.
+- Avoid hardcoding versions in multiple places—use `<properties>` for central version control.
+
